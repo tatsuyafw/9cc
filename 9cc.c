@@ -30,6 +30,7 @@ typedef struct Node {
 int pos = 0;
 
 Node *add();
+Node *mul();
 Node *term();
 
 void error(int i) {
@@ -71,7 +72,15 @@ Node *term() {
 
 Node *mul() {
   Node *node = term();
-  return node;
+
+  for (;;) {
+    if(consume('*')) {
+      node = new_node('*', node, term());
+    } else {
+      return node;
+    }
+  }
+
 }
 
 Node *add() {
@@ -97,7 +106,7 @@ void tokenize(char *p) {
       continue;
     }
 
-    if (*p == '+' || *p == '-') {
+    if (*p == '+' || *p == '-' || *p == '*') {
       tokens[i].ty = *p;
       tokens[i].input = p;
       i++;
@@ -139,6 +148,9 @@ void gen(Node *node) {
     break;
   case '-':
     printf("  sub rax, rdi\n");
+    break;
+  case '*':
+    printf("  mul rdi\n");
     break;
   }
   printf("  push rax\n");
