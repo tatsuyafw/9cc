@@ -62,6 +62,15 @@ int consume(int ty) {
 }
 
 Node *term() {
+  if (consume('(')) {
+    Node *node = add();
+    if (!consume(')')) {
+      fprintf(stderr, "開きカッコに対応する閉じカッコがありません: %s", tokens[pos].input);
+      exit(1);
+    }
+    return node;
+  }
+
   if (tokens[pos].ty == TK_NUM) {
     return new_node_num(tokens[pos++].val);
   }
@@ -108,7 +117,7 @@ void tokenize(char *p) {
       continue;
     }
 
-    if (*p == '+' || *p == '-' || *p == '*' || *p == '/') {
+    if (*p == '+' || *p == '-' || *p == '*' || *p == '/' || *p == '(' || *p == ')') {
       tokens[i].ty = *p;
       tokens[i].input = p;
       i++;
