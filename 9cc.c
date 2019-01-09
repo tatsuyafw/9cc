@@ -66,6 +66,7 @@ Node *term() {
   }
 
   fprintf(stderr, "数値でも開きカッコでもないトークンです: %s", tokens[pos].input);
+  exit(1);
 }
 
 Node *mul() {
